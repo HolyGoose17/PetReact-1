@@ -1,0 +1,37 @@
+.role-filter {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin: 15px 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.btnSearch {
+  width: 20%;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: #88afad;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btnSearch:hover {
+  background-color: rgba(190, 148, 148, 0.3);
+}
+
+.btnSearch.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  transform: scale(1.05);
+  transition: 2s ease;
+}

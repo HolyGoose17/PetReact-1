@@ -1,0 +1,72 @@
+.login {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  gap: 20px;
+  right: 10px;
+  top: 10px;
+}
+
+.loginError {
+  font-size: 18px;
+  color: red;
+}
+
+.login-popup-overlay {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateY(8px);
+  width: 320px;
+  background: rgb(103, 206, 94);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  z-index: 1000;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.login-popup-overlay::before {
+  color: green;
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+.login-popup-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.input-wrapper {
+}
+
+.layout-auth {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  gap: 15px;
+  color: black;
+}
+
+.layout-auth-status {
+  display: flex;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.input-field {
+  height: 35px;
+}

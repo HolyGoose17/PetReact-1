@@ -1,25 +1,76 @@
-import logo from './logo.svg';
-import './App.css';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import PlayerCardPage from "../src/modules/Player/PlayerCardPage";
+import { Layout } from "./modules/layout";
+import Card from "./modules/Player/Card";
+import GIF from "./img/loadGIF.gif";
+import "./App.css";
+import ClubCardPage from "./modules/Club/ClubCardPage";
 
-function App() {
+const queryClient = new QueryClient();
+
+function AppContent(props) {
+  const { smbd, setSmbd } = props;
+  return <Layout showModalCart={false} smbd={smbd} setSmbd={setSmbd} />;
+}
+
+function HomePage() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="homePage">
+      <nav className="homePage-wrapper">
+        <div className="mainText">
+          Добро пожаловать на наш локальный сайт для просмотра Ваших любимых
+          игроков!
+        </div>
+        <div className="detailsText">
+          Данный сайт сделан на голом энтузиазме Павла, а также помощи его
+          знакомых и Никиты
+        </div>
+        <img src={GIF} alt="loadGIF" />
+      </nav>
     </div>
   );
 }
 
+function App() {
+  const [showModalCart, setShowModalCart] = useState(false);
+  const [smbd, setSmbd] = useState(0);
+
+  useEffect(() => {
+    const fetchPlayersCount = async () => {
+      try {
+        const response = await fetch("http://localhost:3005/player");
+        if (response.ok) {
+          const data = await response.json();
+          setSmbd(data.length);
+        }
+      } catch (error) {
+        console.error("Ошибка загрузки количества игроков:", error);
+        setSmbd(0);
+      }
+    };
+
+    fetchPlayersCount();
+  }, []);
+
+  return (
+    <div className="App">
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AppContent smbd={smbd} setSmbd={setSmbd} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="players"
+              element={<PlayerCardPage setSmbd={setSmbd} />}
+            />
+            <Route path="clubs" element={<ClubCardPage setSmbd={setSmbd} />} />
+          </Routes>
+          {showModalCart && <Card setShowModalCart={setShowModalCart} />}
+        </BrowserRouter>
+      </QueryClientProvider>
+    </div>
+  );
+}
 export default App;

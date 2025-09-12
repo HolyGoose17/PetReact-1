@@ -1,0 +1,33 @@
+.custom-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 90px;
+    overflow-wrap: normal;
+    background-color: rgb(255, 240, 230);
+    color: rgb(209, 87, 0);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-button:hover{
+    opacity: 0.5;
+    transition-duration: 1s;
+}
+
+  .custom-button.secondary{
+    background-color: #ffe5d0; 
+    color: #ff7a00;            
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+    .custom-button.add{
+    background-color: red; 
+    color: white;            
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+

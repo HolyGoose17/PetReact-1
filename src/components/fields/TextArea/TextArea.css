@@ -1,0 +1,10 @@
+.text-area-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.text-area-field {
+  width: 171px;
+  height: 200px;
+}
