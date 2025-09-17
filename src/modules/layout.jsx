@@ -1,19 +1,25 @@
-import { Link } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { IoPeopleOutline } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { useState } from "react";
 import { Button } from "../components/Buttons/Buttons";
 import { Login } from "./Authorize/Login";
+import AuthLogin from "./Authorize/AuthLogin";
 import { loadToken, clearToken } from "./utils/utils";
 import { USER_TYPE } from "./utils/constants";
 
 export function Layout(props) {
-  const { smbd, setSmbd } = props;
+  const {
+    smbd,
+    setSmbd,
+    setShowModalCart = () => {},
+    showModalCart = false,
+    user,
+    setUser = () => {},
+  } = props;
   const [showLogin, setShowLogin] = useState(false);
-  const [user, setUser] = useState(null);
   const searchParams = new URLSearchParams(window.location.search);
-  const view = searchParams.get("clubs");
   const [authLoading, setAuthLoading] = useState(true);
   const userChoice = [];
 
@@ -33,9 +39,12 @@ export function Layout(props) {
         },
       })
         .then(async (res) => {
+          console.log("Check response status:", res.status);
           if (!res.ok) {
             clearToken();
-            setUser(null);
+            const result = await res.json();
+            console.log("Check response data:", result); // 👈 смотри, что пришло
+            setUser(result);
             setAuthLoading(false);
             throw new Error("Неавторизован");
           }
@@ -90,9 +99,7 @@ export function Layout(props) {
             <div className="playersNum">{smbd || null}</div>
             <div className="playersLogo">
               <IoPeopleOutline />
-              <div className="playersTxt">
-                {view === "clubs" ? "Всего клубов" : "Всего игроков"}
-              </div>
+              <div className="playersTxt">Всего игроков</div>
             </div>
           </div>
           <div className="layoutChoice">
@@ -117,7 +124,7 @@ export function Layout(props) {
             <div>Загрузка...</div>
           ) : user ? (
             <>
-              <div className="layout-auth-status">{user.role}</div>
+              <div className="layout-auth-status">{user.login}</div>
               <Button
                 label="Выйти"
                 callback={() => {
@@ -127,8 +134,13 @@ export function Layout(props) {
               />
             </>
           ) : (
-            <Button label="Войти" callback={() => setShowLogin(!showLogin)} />
+            <Link to="/login">
+              <Button label="Sign in" />
+            </Link>
           )}
+          <Link to="/register">
+            <Button label="Sign up" />
+          </Link>
         </div>
       </nav>
     </div>

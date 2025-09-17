@@ -7,12 +7,22 @@ import Card from "./modules/Player/Card";
 import GIF from "./img/loadGIF.gif";
 import "./App.css";
 import ClubCardPage from "./modules/Club/ClubCardPage";
+import AuthLogin from "./modules/Authorize/AuthLogin";
+import Login from "./modules/Authorize/Login";
 
 const queryClient = new QueryClient();
 
 function AppContent(props) {
   const { smbd, setSmbd } = props;
-  return <Layout showModalCart={false} smbd={smbd} setSmbd={setSmbd} />;
+  const [user, setUser] = useState(null);
+  return (
+    <Layout
+      showModalCart={false}
+      smbd={smbd}
+      setSmbd={setSmbd}
+      setUser={setUser}
+    />
+  );
 }
 
 function HomePage() {
@@ -66,6 +76,8 @@ function App() {
               element={<PlayerCardPage setSmbd={setSmbd} />}
             />
             <Route path="clubs" element={<ClubCardPage setSmbd={setSmbd} />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<AuthLogin />} />
           </Routes>
           {showModalCart && <Card setShowModalCart={setShowModalCart} />}
         </BrowserRouter>

@@ -96,7 +96,7 @@ export const PlayerCardPage = (props) => {
 
   const updatePlayer = useMutation({
     mutationFn: (item) =>
-      fetch(`http://localhost:3005/player/${item.id}`, {
+      fetch(`http://localhost:3005/player/${item.ID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -113,8 +113,8 @@ export const PlayerCardPage = (props) => {
   });
 
   const deletePlayer = useMutation({
-    mutationFn: (id) =>
-      fetch(`http://localhost:3005/player/${id}`, {
+    mutationFn: (ID) =>
+      fetch(`http://localhost:3005/player/${ID}`, {
         method: "DELETE",
       }),
     onSuccess: () => {
@@ -150,9 +150,9 @@ export const PlayerCardPage = (props) => {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (ID) => {
     if (window.confirm("Удалить этого игрока?")) {
-      deletePlayer.mutate(id);
+      deletePlayer.mutate(ID);
     }
   };
 

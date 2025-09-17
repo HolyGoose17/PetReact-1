@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Buttons/Buttons";
-import { DTO } from "../../components/FieldDTO";
+import { DTO } from "../../components/DTO";
 import { TextInput } from "../../components/fields/TextInput/TextInput";
 import { FileInput } from "../../components/fields/FileInput";
 import { CustomSelect } from "../../components/CustomSelect/CustomSelect";
@@ -18,9 +18,46 @@ export const PlayerFormCard = (props) => {
     roles = [],
   } = props;
 
-  const { getValues, control } = useForm({
-    defaultValues: { ...selected, path: "" },
+  const { getValues, control, reset } = useForm({
+    defaultValues: {
+      playerName: "",
+      playerAge: "",
+      playerNational: "",
+      playerFoot: "",
+      playerSalary: "",
+      roleName: "",
+      agentName: "",
+      clubName: "",
+      path: "",
+      pathClub: "",
+    },
   });
+
+  useEffect(() => {
+    if (selected) {
+      reset({
+        ...selected,
+        roleName: selected.roleName?.roleID || selected.roleName || "",
+        agentName: selected.agentName?.agentID || selected.agentName || "",
+        clubName: selected.clubName?.clubID || selected.clubName || "",
+        path: "",
+        pathClub: "",
+      });
+    } else {
+      reset({
+        playerName: "",
+        playerAge: "",
+        playerNational: "",
+        playerFoot: "",
+        playerSalary: "",
+        roleName: "",
+        agentName: "",
+        clubName: "",
+        path: "",
+        pathClub: "",
+      });
+    }
+  }, [selected, reset]);
 
   const getDefaultValues = () => {
     if (!selected) return { path: "" };
@@ -59,6 +96,8 @@ export const PlayerFormCard = (props) => {
 
   const onSubmit = () => {
     const formData = getValues();
+    console.log("path is File:", formData.path instanceof File);
+    console.log("path value:", formData.path);
 
     const dataToSave = {
       playerName: formData.playerName,
@@ -67,14 +106,14 @@ export const PlayerFormCard = (props) => {
       playerFoot: formData.playerFoot,
       playerSalary: parseFloat(formData.playerSalary) || 0,
       // если сломается замени на roleNameRoleID и т.д.
-      roleName: formData.roleName
-        ? { roleID: parseInt(formData.roleName) }
+      roleNameRoleID: formData.roleNameRoleID
+        ? parseInt(formData.roleNameRoleID)
         : null,
-      agentName: formData.agentName
-        ? { agentID: parseInt(formData.agentName) }
+      agentNameAgentID: formData.agentNameAgentID
+        ? parseInt(formData.agentNameAgentID)
         : null,
-      clubName: formData.clubName
-        ? { clubID: parseInt(formData.clubName) }
+      clubNameClubID: formData.clubNameClubID
+        ? parseInt(formData.clubNameClubID)
         : null,
 
       path: formData.path ? extractFileName(formData.path) : null,
@@ -83,13 +122,14 @@ export const PlayerFormCard = (props) => {
 
     handleSave(dataToSave);
   };
-
   const extractFileName = (fullPath) => {
     if (!fullPath) return null;
-    const fileName = fullPath.replace(/^.*[\\/]/, "");
-    return `${fileName}`;
+    if (typeof fullPath === "string" && fullPath.includes("img/"))
+      return fullPath;
+    if (fullPath instanceof File) return `img/${fullPath.name}`;
+    const fileName = fullPath.split("\\").pop().split("/").pop();
+    return `img/${fileName}`;
   };
-
   return (
     <div className="player-form-popUp">
       <div className="player-form-wrapper" onClick={closeForm}></div>

@@ -26,7 +26,7 @@ export const CustomSelect = ({
   label = "",
   placeholder = "",
   labelKey = "name",
-  valueKey = "id",
+  valueKey = "ID",
   ...props
 }) => {
   return (

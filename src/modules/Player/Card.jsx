@@ -13,7 +13,7 @@ export const Card = ({
   onEdit,
   onDelete,
 }) => {
-  console.log("Item received:", item);
+  // console.log("Item received:", item);
   // const [isEditing, setIsEditing] = useState(false);
   // const [editedData, setEditedData] = useState({ ...item });
 
