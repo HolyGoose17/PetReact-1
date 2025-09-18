@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { IoPeopleOutline } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -18,49 +18,44 @@ export function Layout(props) {
     user,
     setUser = () => {},
   } = props;
-  const [showLogin, setShowLogin] = useState(false);
   const searchParams = new URLSearchParams(window.location.search);
-  const [authLoading, setAuthLoading] = useState(true);
+  // const [authLoading, setAuthLoading] = useState(true);
+  const navigate = useNavigate();
   const userChoice = [];
 
-  const { isLoading: checkLoading } = useQuery({
-    queryKey: ["check", loadToken()],
-    queryFn: () => {
+  const { isLoading: checkLoading, isError } = useQuery({
+    queryKey: ["auth"], // Лучше назвать понятно
+    queryFn: async () => {
       const token = loadToken();
       if (!token) {
         setUser(null);
-        setAuthLoading(false);
-        return Promise.resolve(null);
+        return null;
       }
 
-      return fetch("http://localhost:3005/check", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(async (res) => {
-          console.log("Check response status:", res.status);
-          if (!res.ok) {
-            clearToken();
-            const result = await res.json();
-            console.log("Check response data:", result); // 👈 смотри, что пришло
-            setUser(result);
-            setAuthLoading(false);
-            throw new Error("Неавторизован");
-          }
-          const result = await res.json();
-          setUser(result);
-          setAuthLoading(false);
-          return result;
-        })
-        .catch(() => {
-          clearToken();
-          setUser(null);
-          setAuthLoading(false);
-          return null;
+      try {
+        const res = await fetch("http://localhost:3005/check", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+
+        if (!res.ok) {
+          throw new Error("Неавторизован");
+        }
+
+        const userData = await res.json();
+        setUser(userData);
+        return userData;
+      } catch (error) {
+        clearToken();
+        setUser(null);
+        throw error;
+      }
     },
     retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
   });
 
   useQuery({
@@ -111,7 +106,7 @@ export function Layout(props) {
           </div>
         </div>
         <div className="layout-auth">
-          {showLogin ? (
+          {/* {showLogin ? (
             <div className="login-popup-overlay">
               <Login
                 setShowLogin={setShowLogin}
@@ -119,14 +114,14 @@ export function Layout(props) {
                 user={user}
               />
             </div>
-          ) : null}
-          {authLoading ? (
+          ) : null} */}
+          {checkLoading ? (
             <div>Загрузка...</div>
           ) : user ? (
             <>
               <div className="layout-auth-status">{user.login}</div>
               <Button
-                label="Выйти"
+                label="Sign out"
                 callback={() => {
                   clearToken();
                   setUser(null);
@@ -134,13 +129,9 @@ export function Layout(props) {
               />
             </>
           ) : (
-            <Link to="/login">
-              <Button label="Sign in" />
-            </Link>
+            <Button label="Sign in" callback={() => navigate("/login")} />
           )}
-          <Link to="/register">
-            <Button label="Sign up" />
-          </Link>
+          <Button label="Sign up" callback={() => navigate("/register")} />
         </div>
       </nav>
     </div>

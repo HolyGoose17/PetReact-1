@@ -14,7 +14,7 @@ export function Button(props) {
         secondary: variant === "secondary",
         add: variant === "add",
       })}
-      onClick={callback}
+      onClick={() => callback()}
     >
       {label}
     </div>

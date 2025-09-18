@@ -10,7 +10,11 @@ export const saveCart = (key = "", obj = { count: 0, result: {} }) => {
 };
 
 export const saveToken = (token) => {
-  localStorage.setItem("jwt", token);
+  if (!token) {
+    console.warn("⚠️ Попытка сохранить пустой токен");
+    return;
+  }
+  localStorage.setItem("authToken", token);
 };
 
 export const loadToken = () => {

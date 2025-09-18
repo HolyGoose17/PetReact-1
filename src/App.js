@@ -13,13 +13,14 @@ import Login from "./modules/Authorize/Login";
 const queryClient = new QueryClient();
 
 function AppContent(props) {
-  const { smbd, setSmbd } = props;
-  const [user, setUser] = useState(null);
+  const { smbd, setSmbd, user, setUser } = props;
+  // const [user, setUser] = useState(null);
   return (
     <Layout
       showModalCart={false}
       smbd={smbd}
       setSmbd={setSmbd}
+      user={user}
       setUser={setUser}
     />
   );
@@ -45,6 +46,7 @@ function HomePage() {
 
 function App() {
   const [showModalCart, setShowModalCart] = useState(false);
+  const [user, setUser] = useState(null);
   const [smbd, setSmbd] = useState(0);
 
   useEffect(() => {
@@ -68,7 +70,12 @@ function App() {
     <div className="App">
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <AppContent smbd={smbd} setSmbd={setSmbd} />
+          <AppContent
+            smbd={smbd}
+            setSmbd={setSmbd}
+            user={user}
+            setUser={setUser}
+          />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route
@@ -76,8 +83,22 @@ function App() {
               element={<PlayerCardPage setSmbd={setSmbd} />}
             />
             <Route path="clubs" element={<ClubCardPage setSmbd={setSmbd} />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<AuthLogin />} />
+            <Route
+              path="login"
+              element={
+                <Login setUser={setUser} user={user} setShowLogin={() => {}} />
+              }
+            />
+            <Route
+              path="register"
+              element={
+                <AuthLogin
+                  setUser={setUser}
+                  user={user}
+                  setShowLogin={() => {}}
+                />
+              }
+            />
           </Routes>
           {showModalCart && <Card setShowModalCart={setShowModalCart} />}
         </BrowserRouter>

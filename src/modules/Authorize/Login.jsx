@@ -9,7 +9,7 @@ import { TextAuthInput } from "../Authorize/AuthInput/TextAuthInput";
 import { saveToken } from "../utils/utils";
 
 export const Login = (props) => {
-  const { setShowLogin, setUser } = props;
+  const { setUser } = props;
   const { getValues, control } = useForm({});
   const navigate = useNavigate();
 

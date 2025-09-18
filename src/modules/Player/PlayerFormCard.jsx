@@ -6,7 +6,6 @@ import { FileInput } from "../../components/fields/FileInput";
 import { CustomSelect } from "../../components/CustomSelect/CustomSelect";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { loadToken } from "../utils/utils";
 
 export const PlayerFormCard = (props) => {
   const {
@@ -106,15 +105,9 @@ export const PlayerFormCard = (props) => {
       playerFoot: formData.playerFoot,
       playerSalary: parseFloat(formData.playerSalary) || 0,
       // если сломается замени на roleNameRoleID и т.д.
-      roleNameRoleID: formData.roleNameRoleID
-        ? parseInt(formData.roleNameRoleID)
-        : null,
-      agentNameAgentID: formData.agentNameAgentID
-        ? parseInt(formData.agentNameAgentID)
-        : null,
-      clubNameClubID: formData.clubNameClubID
-        ? parseInt(formData.clubNameClubID)
-        : null,
+      roleName: formData.roleName ? parseInt(formData.roleName) : null,
+      agentName: formData.agentName ? parseInt(formData.agentName) : null,
+      clubName: formData.clubName ? parseInt(formData.clubName) : null,
 
       path: formData.path ? extractFileName(formData.path) : null,
       pathClub: formData.pathClub ? extractFileName(formData.pathClub) : null,
